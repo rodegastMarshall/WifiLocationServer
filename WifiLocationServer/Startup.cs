@@ -28,6 +28,10 @@ namespace WifiLocationServer
         {
             services.AddSingleton<InterfaceLocationRepository, LocationItemRepository>();
             services.AddControllers();
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo { Title = "WifiLocationServer", Version = "v1" });
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -36,6 +40,12 @@ namespace WifiLocationServer
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                app.UseSwagger();
+                app.UseSwaggerUI(c =>
+                {
+                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "My Location Server 1");
+                    c.SwaggerEndpoint("/swagger/v2/swagger.json", "My Location Server 2");
+                });
             }
 
             app.UseHttpsRedirection();
