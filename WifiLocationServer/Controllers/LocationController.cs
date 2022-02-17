@@ -1,13 +1,15 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using WifiLocationServer.Dtos;
 using WifiLocationServer.Entities;
 using WifiLocationServer.Repositories;
 
 namespace WifiLocationServer.Controllers
 {
     [ApiController]
-    [Route("items")]
+    [Route("Items")]
     public class LocationController : ControllerBase
     {
         private readonly InterfaceLocationRepository repository;
@@ -17,13 +19,15 @@ namespace WifiLocationServer.Controllers
             this.repository = repository;
         }
         [HttpGet]
-        public IEnumerable<Item> GetItems()
+        public IEnumerable<ItemDto> GetItems()
         {
-            var items = repository.GetItems();
+            var items = repository.GetItems().Select(item => item.AsDto());
+         
             return items;
         }
+
         [HttpGet("{id}")]
-        public ActionResult<Item> GetItem(Guid id)
+        public ActionResult<ItemDto> GetItem(Guid id)
         {
             var item = repository.GetItem(id);
 
@@ -32,8 +36,26 @@ namespace WifiLocationServer.Controllers
                 return NotFound();
             }
 
-            return item;
+            return item.AsDto();
         }
+
+        [HttpPost]
+        public ActionResult<ItemDto> CreateLocation(CreateLocationDto itemDto)
+        {
+            Item item = new()
+            {
+                Id = Guid.NewGuid(),
+                Location = itemDto.Location,
+                MAC = itemDto.MAC,
+                MaxSignalStrength = itemDto.MaxSignalStrength,
+                MinSignalStrength = itemDto.MinSignalStrength
+                };
+
+            repository.CreateItem(item);
+
+            return CreatedAtAction(nameof(GetItem), new { id = item.Id }, item.AsDto());
+        }
+
     }
 }
 

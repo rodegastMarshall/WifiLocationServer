@@ -13,22 +13,25 @@ namespace WifiLocationServer.Repositories
             {
                 Id = Guid.NewGuid(),
                 Location = "Hopwood",
-                MAC = "XEROX",
-                SignalStrength = -70
+                MAC = "00:00:75",
+                MaxSignalStrength = -70,
+                MinSignalStrength = -10
             },
             new Item
             {
                 Id = Guid.NewGuid(),
                 Location = "HOBBS",
-                MAC = "MATRIX",
-                SignalStrength = -59
+                MAC = "00:00:7F",
+                MaxSignalStrength = -59,
+                MinSignalStrength = -9
             },
             new Item
             {
                 Id = Guid.NewGuid(),
                 Location = "SHEWEL",
-                MAC = "CAMEX",
-                SignalStrength = -40
+                MAC = "00:00:6F",
+                MaxSignalStrength = -40,
+                MinSignalStrength = 0
             }
         };
 
@@ -41,6 +44,12 @@ namespace WifiLocationServer.Repositories
         {
             return items.Where(item => item.Id == id).SingleOrDefault();
         }
+
+        public void CreateItem(Item item)
+        {
+            items.Add(item);
+        }
+
     }
 }
 
