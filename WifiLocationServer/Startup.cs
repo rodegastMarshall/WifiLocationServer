@@ -42,7 +42,10 @@ namespace WifiLocationServer
             services.AddSingleton<InterfaceLocationRepository, LocationDB>();
 
             services.AddSingleton<InterfaceLocationRepository, LocationItemRepository>();
-            services.AddControllers();
+            services.AddControllers(options =>
+            {
+                options.SuppressAsyncSuffixInActionNames = false;
+            });
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo { Title = "WifiLocationServer", Version = "v1" });

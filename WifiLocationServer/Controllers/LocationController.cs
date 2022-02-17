@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using WifiLocationServer.Dtos;
 using WifiLocationServer.Entities;
 using WifiLocationServer.Repositories;
@@ -19,17 +20,18 @@ namespace WifiLocationServer.Controllers
             this.repository = repository;
         }
         [HttpGet]
-        public IEnumerable<ItemDto> GetItems()
+        public async Task<IEnumerable<ItemDto>> GetItemsAsync()
         {
-            var items = repository.GetItems().Select(item => item.AsDto());
-         
+            var items = (await repository.GetItemsAsync())
+                .Select(item => item.AsDto());
+     
             return items;
         }
 
         [HttpGet("{id}")]
-        public ActionResult<ItemDto> GetItem(Guid id)
+        public async Task<ActionResult<ItemDto>> GetItemAsync(Guid id)
         {
-            var item = repository.GetItem(id);
+            var item = await repository.GetItemAsync(id);
 
             if(item is null )
             {
@@ -40,7 +42,7 @@ namespace WifiLocationServer.Controllers
         }
 
         [HttpPost]
-        public ActionResult<ItemDto> CreateLocation(CreateLocationDto itemDto)
+        public async Task<ActionResult<ItemDto>> CreateLocationASync(CreateLocationDto itemDto)
         {
             Item item = new()
             {
@@ -51,9 +53,9 @@ namespace WifiLocationServer.Controllers
                 MinSignalStrength = itemDto.MinSignalStrength
                 };
 
-            repository.CreateItem(item);
+            await repository.CreateItemAsync(item);
 
-            return CreatedAtAction(nameof(GetItem), new { id = item.Id }, item.AsDto());
+            return CreatedAtAction(nameof(GetItemAsync), new { id = item.Id }, item.AsDto());
         }
 
     }
