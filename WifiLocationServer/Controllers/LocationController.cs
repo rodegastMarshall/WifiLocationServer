@@ -60,14 +60,14 @@ namespace WifiLocationServer.Controllers
         [HttpPut("{id}")]
         public async Task<ActionResult> updateItem(Guid id, UpdateLocationDto itemDto)
         {
-            var existingItem = repository.GetItemAsync(id);
+            var existingItem = await repository.GetItemAsync(id);
 
             if (existingItem is null)
             {
                 return NotFound();
             }
 
-            Item updatedItem = existingItem with
+            Item updatedItem =  existingItem with
             {
                 Location = itemDto.Location,
                 MAC = itemDto.MAC,
@@ -75,7 +75,7 @@ namespace WifiLocationServer.Controllers
                 MinSignalStrength = itemDto.MinSignalStrength
             };
 
-            await repository.UpdateItemAsync(updatedItem);
+           await repository.UpdateItemAsync(updatedItem);
 
             return NoContent();
         }
