@@ -24,6 +24,12 @@ namespace WifiLocationServer.Repositories
             await itemsCollection.InsertOneAsync(item);
         }
 
+        public async Task DeleteItem(Guid id)
+        {
+            var filter = filterBuilder.Eq(item => item.Id, id);
+            await itemsCollection.DeleteOneAsync(filter);
+        }
+
         public async Task<Item> GetItemAsync(Guid id)
         {
             var filter = filterBuilder.Eq(item => item.Id, id);
@@ -33,6 +39,12 @@ namespace WifiLocationServer.Repositories
         public async Task<IEnumerable<Item>> GetItemsAsync()
         {
             return await itemsCollection.Find(new BsonDocument()).ToListAsync();
+        }
+
+        public async Task UpdateItem(Item item)
+        {
+            var filter = filterBuilder.Eq(existingItem => existingItem.Id, item.Id);
+            await itemsCollection.ReplaceOneAsync(filter, item);
         }
     }
 }

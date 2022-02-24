@@ -13,5 +13,8 @@ namespace WifiLocationServer.Repositories
 
         Task CreateItemAsync(Item item);
 
+        Task UpdateItemAsync(Item item);
+
+        Task DeleteItemAsync(Guid id);
     }
 }

@@ -53,6 +53,19 @@ namespace WifiLocationServer.Repositories
             await Task.CompletedTask;
         }
 
+        public async Task UpdateItemAsync(Item item)
+        {
+            var index = items.FindIndex(existingItem => existingItem.Id == item.Id);
+            items[index] = item;
+            await Task.CompletedTask;
+        }
+
+        public async Task DeleteItemAsync(Guid id)
+        {
+            var index = items.FindIndex(existingItem => existingItem.Id == id);
+            items.RemoveAt(index);
+            await Task.CompletedTask;
+        }
     }
 }
 

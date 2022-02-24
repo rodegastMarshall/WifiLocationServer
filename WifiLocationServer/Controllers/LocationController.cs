@@ -57,6 +57,42 @@ namespace WifiLocationServer.Controllers
 
             return CreatedAtAction(nameof(GetItemAsync), new { id = item.Id }, item.AsDto());
         }
+        [HttpPut("{id}")]
+        public async Task<ActionResult> updateItem(Guid id, UpdateLocationDto itemDto)
+        {
+            var existingItem = repository.GetItemAsync(id);
+
+            if (existingItem is null)
+            {
+                return NotFound();
+            }
+
+            Item updatedItem = existingItem with
+            {
+                Location = itemDto.Location,
+                MAC = itemDto.MAC,
+                MaxSignalStrength = itemDto.MaxSignalStrength,
+                MinSignalStrength = itemDto.MinSignalStrength
+            };
+
+            await repository.UpdateItemAsync(updatedItem);
+
+            return NoContent();
+        }
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> DeleteItem(Guid id)
+        {
+            var existingItem = repository.GetItemAsync(id);
+
+            if (existingItem is null)
+            {
+                return NotFound();
+            }
+
+           await repository.DeleteItemAsync(id);
+
+            return NoContent();
+        }
 
     }
 }
